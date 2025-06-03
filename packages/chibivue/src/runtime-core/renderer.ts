@@ -10,6 +10,8 @@ export function createRender<T>(rendererOpts: RendererOptions<T>): { render: Ren
 
     const parentNode = rendererOpts.createElement(vnode.type)
 
+    rendererOpts.patchProp(parentNode, vnode.props)
+
     for (const item of vnode.child) {
       const node = renderVNode(item)
       rendererOpts.insert(node, parentNode)

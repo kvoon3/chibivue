@@ -5,5 +5,5 @@ export interface VNode {
 }
 
 export interface VNodeProps {
-  [key: string]: any
+  [key: string]: (() => void) | string
 }
