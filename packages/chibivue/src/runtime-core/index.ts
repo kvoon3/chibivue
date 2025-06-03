@@ -21,14 +21,20 @@ export function createRender<T>(rendererOpts: RendererOptions<T>): { render: Ren
 // render DOM
 const { render } = createRender(nodeOpts)
 
-export function createAppCore(rootComponent: Component): {
-  mount: (rootContainer: any) => void
-} {
-  return {
-    mount(rootContainer) {
-      const message = rootComponent.render()
+// create app core
+export function createAppApi<T>(render: RenderFunction<T>) {
+  return function createAppCore(rootComponent: Component): {
+    mount: (rootContainer: any) => void
+  } {
+    return {
+      mount(rootContainer) {
+        const message = rootComponent.render()
 
-      render(rootContainer, message)
-    },
+        render(rootContainer, message) // still rely on render DOM
+      },
+    }
   }
 }
+
+// create app dom
+export const createAppDOM = createAppApi(render)
