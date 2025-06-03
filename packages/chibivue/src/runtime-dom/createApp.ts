@@ -1,5 +1,5 @@
 import type { App, Component } from '../types'
-import { createAppApi } from '../runtime-core'
+import { createAppApi } from '../runtime-core/apiCreateApp'
 import { createRender } from '../runtime-core/renderer'
 import { nodeOpts } from './nodeOpts'
 
