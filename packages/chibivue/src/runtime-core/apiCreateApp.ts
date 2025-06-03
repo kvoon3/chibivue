@@ -10,7 +10,7 @@ export function createAppApi<T>(render: RenderFunction<T>) {
       mount(rootContainer) {
         const message = rootComponent.render()
 
-        render(rootContainer, message) // still rely on render DOM
+        render(message, rootContainer) // still rely on render DOM
       },
     }
   }
