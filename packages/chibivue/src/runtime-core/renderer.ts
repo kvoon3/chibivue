@@ -1,3 +1,3 @@
-export interface RendererOptions<T> {
+export interface RendererOptions<T = any> {
   setTextContent: (node: T, text: string) => void
 }
