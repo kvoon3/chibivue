@@ -1,6 +1,4 @@
-export interface RendererOptions<T = any> {
-  setTextContent: (node: T, text: string) => void
-}
+import type { RendererOptions } from './rendererOpts'
 
 export type RenderFunction<T> = (rootContainer: T, message: string) => void
 
