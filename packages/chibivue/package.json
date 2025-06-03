@@ -1,0 +1,22 @@
+{
+  "name": "chibivue",
+  "version": "0.0.0",
+  "packageManager": "pnpm@10.11.0",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "exports": {
+    "types": "./dist/index.d.mts",
+    "import": "./dist/index.mjs"
+  },
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "scripts": {
+    "dev": "tsdown --watch",
+    "build": "tsdown"
+  },
+  "devDependencies": {
+    "tsdown": "catalog:cli"
+  }
+}

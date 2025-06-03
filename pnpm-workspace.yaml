@@ -1,0 +1,18 @@
+packages:
+  - 'packages/*'
+  - playground
+catalog:
+catalogs:
+  cli:
+    '@antfu/eslint-config': ^4.13.2
+    '@antfu/ni': ^25.0.0
+    '@antfu/nip': ^0.1.0
+    eslint: ^9.28.0
+    lint-staged: ^16.1.0
+    simple-git-hooks: ^2.13.0
+    taze: latest
+    tsdown: ^0.12.6
+    typescript: latest
+    vite: ^6.3.5
+  types:
+    '@types/node': ^22.15.29
