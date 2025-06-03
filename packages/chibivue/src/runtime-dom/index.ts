@@ -1,10 +1,15 @@
 import type { App, Component } from '../types'
-import { createAppCore } from '../runtime-core'
+import { createAppApi } from '../runtime-core'
+import { createRender } from '../runtime-core/renderer'
+import { nodeOpts } from './renderer'
+
+const { render } = createRender(nodeOpts)
+export const createAppDOM = createAppApi(render)
 
 export function createApp(rootComponent: Component): App {
   return {
     mount(selector) {
-      const { mount } = createAppCore(rootComponent)
+      const { mount } = createAppDOM(rootComponent)
 
       const rootContainer = document.querySelector(selector)
       if (!rootContainer)
