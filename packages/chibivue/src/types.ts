@@ -1,7 +1,9 @@
+import type { VNode } from './runtime-core/vnode'
+
 export interface App {
   mount: (selector: string) => void
 }
 
 export interface Component {
-  render: () => string
+  render: () => VNode
 }

@@ -1,10 +1,25 @@
 import type { RendererOptions } from './rendererOpts'
+import type { VNode } from './vnode'
 
-export type RenderFunction<T> = (message: string, rootContainer: T) => void
+export type RenderFunction<T> = (vnode: VNode, rootContainer: T) => void
 
 export function createRender<T>(rendererOpts: RendererOptions<T>): { render: RenderFunction<T> } {
-  const render = (message: string, rootContainer: T): void => {
-    rendererOpts.setTextContent(rootContainer, message)
+  const renderVNode = (vnode: VNode | string): T => {
+    if (typeof vnode === 'string')
+      return rendererOpts.createText(vnode)
+
+    const parentNode = rendererOpts.createElement(vnode.type)
+
+    for (const item of vnode.child) {
+      const node = renderVNode(item)
+      rendererOpts.insert(node, parentNode)
+    }
+
+    return parentNode
+  }
+
+  const render = (vnode: VNode, rootContainer: T): void => {
+    rendererOpts.insert(renderVNode(vnode), rootContainer)
   }
 
   return { render }
