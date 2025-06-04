@@ -8,6 +8,9 @@ const app = createApp({
         onClick() {
           console.log('clicked')
         },
+        onclick() {
+          console.log('clicked2')
+        },
       }, 'chibivue'),
     ]),
   ]),

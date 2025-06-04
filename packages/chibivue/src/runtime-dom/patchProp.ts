@@ -1,10 +1,7 @@
-/* eslint-disable unused-imports/no-unused-vars */
-
 import type { RendererOptions } from '../runtime-core/rendererOpts'
 
 // 1. add all event
-// 2. listen event once
-// 3. use invoke to collect events
+// 2. listen event once by invokers
 
 function addEventListener(
   node: Node,
@@ -37,28 +34,36 @@ export const patchProp: RendererOptions<Node>['patchProp'] = (node, props) => {
 }
 
 function patchEvent(
-  node: Node & { _vei?: Record<string, EventListener | undefined> },
+  node: Node & { _vei?: Record<string, { value: EventListener } | undefined> },
   rawName: string,
-  value?: (() => void),
+  value?: (evt: Event) => void,
 ): void {
   const invokers = node._vei || (node._vei = {})
   const existingInvoker = invokers[rawName]
 
   if (value && existingInvoker) {
-    // TODO: patch
+    // patch
+    existingInvoker.value = value
   }
   else {
+    const eventName = parseName(rawName)
     if (value) {
-      // TODO: add
+      // add
+      invokers[rawName] = { value }
+      addEventListener(node, eventName, (e) => {
+        invokers[rawName]?.value(e)
+      })
     }
-    else {
-      // TODO: delete
+    else if (existingInvoker) {
+      // remove
+      removeEventListener(node, eventName, existingInvoker.value)
+      invokers[rawName] = undefined
     }
   }
 }
 
-function parseEvent(key: string): string {
-  return key.slice(2).toLowerCase()
+function parseName(key: string): string {
+  return key.slice(2).toLocaleLowerCase()
 }
 
 function patchAttr(node: Element, key: string, value: string): void {
