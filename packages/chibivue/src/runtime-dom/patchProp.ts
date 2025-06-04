@@ -11,40 +11,40 @@ interface Invoker extends EventListener {
 type EventValue = (e: Event) => void
 
 function addEventListener(
-  node: Element,
+  el: Element,
   eventName: string,
   callback: EventListenerOrEventListenerObject,
 ): void {
-  node.addEventListener(eventName, callback)
+  el.addEventListener(eventName, callback)
 }
 
 function removeEventListener(
-  node: Element,
+  el: Element,
   eventName: string,
   callback: EventListenerOrEventListenerObject,
 ): void {
-  node.removeEventListener(eventName, callback)
+  el.removeEventListener(eventName, callback)
 }
 
-export const patchProp: RendererOptions<Node, Element>['patchProp'] = (node, props) => {
+export const patchProp: RendererOptions<Node, Element>['patchProp'] = (el, props) => {
   for (const [key, value] of Object.entries(props)) {
     // is event
     if (key.startsWith('on') && typeof value === 'function') {
-      patchEvent(node, key, value)
+      patchEvent(el, key, value)
     }
     // is attr
     else if (typeof value === 'string') {
-      patchAttr(node, key, value)
+      patchAttr(el, key, value)
     }
   }
 }
 
 function patchEvent(
-  node: Element & { _vei?: Record<string, Invoker | undefined> },
+  el: Element & { _vei?: Record<string, Invoker | undefined> },
   rawName: string,
   value: EventValue | null,
 ): void {
-  const invokers = node._vei || (node._vei = {})
+  const invokers = el._vei || (el._vei = {})
   const existingInvoker = invokers[rawName]
 
   if (value && existingInvoker) {
@@ -58,11 +58,11 @@ function patchEvent(
       const invoker = createInvoker(value)
 
       invokers[rawName] = invoker
-      addEventListener(node, eventName, invoker)
+      addEventListener(el, eventName, invoker)
     }
     else if (existingInvoker) {
       // remove
-      removeEventListener(node, eventName, existingInvoker.value)
+      removeEventListener(el, eventName, existingInvoker.value)
       invokers[rawName] = undefined
     }
   }
@@ -80,6 +80,9 @@ function createInvoker(value: EventValue): Invoker {
   return invoker
 }
 
-function patchAttr(node: Element, key: string, value: string): void {
-  node.setAttribute(key, value)
+function patchAttr(el: Element, key: string, value: any): void {
+  if (value === null)
+    el.removeAttribute(key)
+  else
+    el.setAttribute(key, value)
 }
