@@ -29,10 +29,9 @@ export const patchProp: RendererOptions<Node>['patchProp'] = (node, props) => {
       patchEvent(node, key, value)
     }
     // is attr
-    else {
-      // FIXME: type error
-      // @ts-expect-error type error
-      node[key] = value
+    else if (typeof value === 'string') {
+      // TODO: type
+      patchAttr(node as Element, key, value)
     }
   }
 }
@@ -60,4 +59,8 @@ function patchEvent(
 
 function parseEvent(key: string): string {
   return key.slice(2).toLowerCase()
+}
+
+function patchAttr(node: Element, key: string, value: string): void {
+  node.setAttribute(key, value)
 }
