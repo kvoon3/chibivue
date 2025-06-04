@@ -11,7 +11,7 @@ interface Invoker extends EventListener {
 type EventValue = (e: Event) => void
 
 function addEventListener(
-  node: Node,
+  node: Element,
   eventName: string,
   callback: EventListenerOrEventListenerObject,
 ): void {
@@ -19,24 +19,22 @@ function addEventListener(
 }
 
 function removeEventListener(
-  node: Node,
+  node: Element,
   eventName: string,
   callback: EventListenerOrEventListenerObject,
 ): void {
   node.removeEventListener(eventName, callback)
 }
 
-export const patchProp: RendererOptions<Node>['patchProp'] = (node, props) => {
+export const patchProp: RendererOptions<Node, Element>['patchProp'] = (node, props) => {
   for (const [key, value] of Object.entries(props)) {
     // is event
     if (key.startsWith('on') && typeof value === 'function') {
-      // TODO: type
-      patchEvent(node as Element, key, value)
+      patchEvent(node, key, value)
     }
     // is attr
     else if (typeof value === 'string') {
-      // TODO: type
-      patchAttr(node as Element, key, value)
+      patchAttr(node, key, value)
     }
   }
 }
