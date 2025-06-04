@@ -1,7 +1,15 @@
-import { createApp, h } from 'chibivue'
+import { createApp, h, reactive } from 'chibivue'
 
 const app = createApp({
   setup() {
+    const project = reactive({
+      name: 'chibivue',
+      desc: 'WIP',
+    })
+
+    console.log('project.name', project.name)
+    project.desc = 'a minimal vue implement'
+
     return () => h('div', {}, [
       h('p', {}, [
         h('span', {
