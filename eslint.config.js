@@ -6,6 +6,9 @@ export default antfu(
   {
     pnpm: true,
     type: 'lib',
+    rules: {
+      'unicorn/expiring-todo-comments': 'error',
+    },
   },
   {
     files: ['./playground/**/*'],

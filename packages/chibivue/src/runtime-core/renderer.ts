@@ -21,6 +21,13 @@ export function createRender<T>(rendererOpts: RendererOptions<T>): { render: Ren
   }
 
   const render = (vnode: VNode, rootContainer: T): void => {
+    /**
+     * Here DOM type and DOM operate are introduced
+     * FIXME (@kvoon3) [2025-06-07]: remove DOM type and DOM operate
+     */
+    while ((rootContainer as Node).firstChild)
+      (rootContainer as Node).removeChild((rootContainer as Node).firstChild!)
+
     rendererOpts.insert(renderVNode(vnode), rootContainer)
   }
 

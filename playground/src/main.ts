@@ -2,27 +2,17 @@ import { createApp, h, reactive } from 'chibivue'
 
 const app = createApp({
   setup() {
-    const project = reactive({
-      name: 'chibivue',
-      desc: 'WIP',
-    })
+    const state = reactive({ count: 0 })
+    const increment = () => {
+      state.count++
+    }
 
-    console.log('project.name', project.name)
-    project.desc = 'a minimal vue implement'
-
-    return () => h('div', {}, [
-      h('p', {}, [
-        h('span', {
-          style: 'background: #dddddd50; padding: 4px; border-radius: 4px',
-          onClick() {
-            console.log('clicked')
-          },
-          onclick() {
-            console.log('clicked2')
-          },
-        }, 'chibivue'),
-      ]),
-    ])
+    return function render() {
+      return h('div', { id: 'my-app' }, [
+        h('p', {}, `count: ${state.count}`),
+        h('button', { onClick: increment }, 'increment'),
+      ])
+    }
   },
 })
 
