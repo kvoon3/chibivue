@@ -4,6 +4,7 @@ export interface App {
   mount: (selector: string) => void
 }
 
-export interface Component {
-  render: () => VNode
+export interface ComponentOptions {
+  render?: () => VNode
+  setup?: () => () => VNode
 }
