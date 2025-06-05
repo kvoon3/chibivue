@@ -24,7 +24,7 @@ export function createRender<
 
     rendererOpts.patchProp(parentNode, vnode.props)
 
-    for (const item of vnode.child) {
+    for (const item of vnode.children) {
       const node = renderVNode(item)
       rendererOpts.insert(node, parentNode)
     }

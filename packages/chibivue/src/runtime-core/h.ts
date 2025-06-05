@@ -4,11 +4,11 @@ import type { VNode, VNodeProps } from './vnode'
 export function h(
   type: string,
   props: VNodeProps,
-  child: VNode[] | string,
+  child: (VNode | string)[] | string,
 ): VNode {
   return {
     type,
     props,
-    child,
+    children: child,
   }
 }

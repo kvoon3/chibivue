@@ -1,7 +1,7 @@
 export interface VNode {
   type: string
   props: VNodeProps
-  child: VNode[] | string
+  children: (VNode | string)[] | string
 }
 
 export interface VNodeProps {

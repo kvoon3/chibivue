@@ -8,7 +8,8 @@ const app = createApp({
     }
 
     return function render() {
-      return h('div', { id: 'my-app' }, [
+      return h('div', { id: 'my-app', class: 'text-center dark:bg-red' }, [
+        h('h1', {}, ['chibivue']),
         h('p', {}, `count: ${state.count}`),
         h('button', { onClick: increment }, 'increment'),
       ])
