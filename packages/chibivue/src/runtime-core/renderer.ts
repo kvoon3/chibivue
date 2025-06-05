@@ -16,15 +16,18 @@ export function createRender<
   HostNode = RendererNode,
   HostElement = RendererElement,
 >(rendererOpts: RendererOptions<HostNode, HostElement>): { render: RenderFunction<HostElement> } {
-  const renderVNode = (vnode: VNode | string): HostNode | HostElement => {
+  const renderVNode = (vnode: VNode): HostNode | HostElement => {
     if (typeof vnode === 'string')
       return rendererOpts.createText(vnode)
 
     const parentNode = rendererOpts.createElement(vnode.type)
 
-    rendererOpts.patchProp(parentNode, vnode.props)
+    if (vnode.props)
+      rendererOpts.patchProp(parentNode, vnode.props)
 
     for (const item of vnode.children) {
+      // FIXME [2025-06-07]: type error
+      // @ts-expect-error type error
       const node = renderVNode(item)
       rendererOpts.insert(node, parentNode)
     }
