@@ -1,3 +1,4 @@
-export { reactive } from './reactivity'
-export { h } from './runtime-core/h'
-export { createApp } from './runtime-dom/createApp'
+export * from './reactivity'
+export * from './runtime-core'
+export * from './runtime-dom'
+export * from './types'
