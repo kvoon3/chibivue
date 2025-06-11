@@ -26,7 +26,7 @@ export function createRender<
       rendererOpts.patchProp(parentNode, vnode.props)
 
     for (const item of vnode.children) {
-      // FIXME [2025-06-07]: type error
+      // FIXME [2025-07-01]: type error
       // @ts-expect-error type error
       const node = renderVNode(item)
       rendererOpts.insert(node, parentNode)
