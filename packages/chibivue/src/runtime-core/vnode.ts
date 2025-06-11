@@ -1,5 +1,9 @@
+export const Text: unique symbol = Symbol('text')
+
+export type VNodeTypes = string | typeof Text
+
 export interface VNode {
-  type: string
+  type: VNodeTypes
   props: VNodeProps | null
   children: VNodeNormailzedChildren
 }
@@ -9,17 +13,27 @@ export interface VNodeProps {
 }
 
 // ATTENTION: only used to export
-export type VNodeChild = VNodeAtom | VNodeChildrenArray
+export type VNodeChild = VNodeAtom | VNodeArrayChildren
 
-export type VNodeNormailzedChildren = string | VNodeChildrenArray
-type VNodeChildrenArray = Array<VNodeAtom | VNodeChildrenArray>
+export type VNodeNormailzedChildren = string | VNodeArrayChildren
+type VNodeArrayChildren = Array<VNodeAtom | VNodeArrayChildren>
 type VNodeAtom = VNode | string
 
 export function createVNode(
-  type: string,
+  type: VNodeTypes,
   props: VNodeProps | null,
-  _children: unknown,
+  children: string,
 ): VNode {
-  const vnode: VNode = { type, props: props || {}, children: [] }
+  const vnode: VNode = { type, props: props || {}, children }
   return vnode
+}
+
+export function normalizeVNode(child: VNodeChild): VNode {
+  if (typeof child === 'object') {
+    return { ...child } as VNode
+  }
+  else {
+    const res = createVNode(Text, null, String(child))
+    return res
+  }
 }

@@ -1,11 +1,11 @@
 import type { RendererElement, RendererNode } from './renderer'
-import type { VNodeProps } from './vnode'
+import type { VNodeProps, VNodeTypes } from './vnode'
 
 export interface RendererOptions<
   HostNode = RendererNode,
   HostElement = RendererElement,
 > {
-  createElement: (type: string) => HostElement
+  createElement: (type: VNodeTypes) => HostElement
 
   createText: (text: string) => HostNode
 

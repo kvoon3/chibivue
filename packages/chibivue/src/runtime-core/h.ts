@@ -1,8 +1,8 @@
-import type { VNode, VNodeProps } from './vnode'
+import type { VNode, VNodeProps, VNodeTypes } from './vnode'
 
 // hyperscript: create vnode
 export function h(
-  type: string,
+  type: VNodeTypes,
   props: VNodeProps,
   children: (VNode | string)[] | string,
 ): VNode {

@@ -1,5 +1,6 @@
 import type { RendererOptions } from './rendererOpts'
 import type { VNode } from './vnode'
+import { normalizeVNode, Text } from './vnode'
 
 export interface RendererNode {
   [key: string]: any
@@ -17,8 +18,13 @@ export function createRender<
   HostElement = RendererElement,
 >(rendererOpts: RendererOptions<HostNode, HostElement>): { render: RenderFunction<HostElement> } {
   const renderVNode = (vnode: VNode): HostNode | HostElement => {
-    if (typeof vnode === 'string')
+    if (typeof vnode === 'string') {
       return rendererOpts.createText(vnode)
+    }
+
+    if (vnode.type === Text) {
+      return rendererOpts.createText(vnode.children as string)
+    }
 
     const parentNode = rendererOpts.createElement(vnode.type)
 
@@ -26,9 +32,7 @@ export function createRender<
       rendererOpts.patchProp(parentNode, vnode.props)
 
     for (const item of vnode.children) {
-      // FIXME [2025-07-01]: type error
-      // @ts-expect-error type error
-      const node = renderVNode(item)
+      const node = renderVNode(normalizeVNode(item))
       rendererOpts.insert(node, parentNode)
     }
 
