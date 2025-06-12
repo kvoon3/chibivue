@@ -15,13 +15,14 @@ export function createAppApi<T>(
       mount(rootContainer) {
         const componentRenderer = rootComponent.setup?.()
 
-        // eslint-disable-next-line prefer-const
         let n1: VNode | null = null
 
         const updateComponent = (): void => {
           const n2 = componentRenderer?.() // start track target
-          if (n2)
+          if (n2) {
             patch(n1, n2, rootContainer)
+            n1 = n2
+          }
         }
 
         const effect = new ReactiveEffect(updateComponent)
