@@ -1,7 +1,6 @@
 import type { Deps } from './dep'
 import { createDeps } from './dep'
 
-// eslint-disable-next-line import/no-mutable-exports
 export let activeEffect: ReactiveEffect | undefined
 
 export class ReactiveEffect<T = any> {
