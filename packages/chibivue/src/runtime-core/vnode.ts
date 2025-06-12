@@ -1,3 +1,5 @@
+import type { RendererNode } from './renderer'
+
 export const Text: unique symbol = Symbol('text')
 
 export type VNodeTypes = string | typeof Text
@@ -6,6 +8,7 @@ export interface VNode {
   type: VNodeTypes
   props: VNodeProps | null
   children: VNodeNormailzedChildren
+  el?: RendererNode | undefined
 }
 
 export interface VNodeProps {
@@ -24,7 +27,7 @@ export function createVNode(
   props: VNodeProps | null,
   children: string,
 ): VNode {
-  const vnode: VNode = { type, props: props || {}, children }
+  const vnode: VNode = { type, props: props || {}, children, el: undefined }
   return vnode
 }
 

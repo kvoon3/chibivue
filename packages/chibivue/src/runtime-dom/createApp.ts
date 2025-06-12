@@ -4,8 +4,8 @@ import { createRender } from '../runtime-core/renderer'
 import { nodeOpts } from './nodeOpts'
 import { patchProp } from './patchProp'
 
-const { render } = createRender({ ...nodeOpts, patchProp })
-const createAppDOM = createAppApi(render)
+const { render, patch } = createRender({ ...nodeOpts, patchProp })
+const createAppDOM = createAppApi(render, patch)
 
 export function createApp(rootComponent: ComponentOptions): App {
   return {

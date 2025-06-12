@@ -1,9 +1,13 @@
 import type { ComponentOptions } from '../types'
-import type { RenderFunction } from './renderer'
+import type { PatchFunction, RenderFunction } from './renderer'
+import type { VNode } from './vnode'
 import { ReactiveEffect } from '../reactivity/effect'
 
 // create app core
-export function createAppApi<T>(render: RenderFunction<T>) {
+export function createAppApi<T>(
+  _render: RenderFunction<T>,
+  patch: PatchFunction,
+) {
   return function createAppCore(rootComponent: ComponentOptions): {
     mount: (rootContainer: any) => void
   } {
@@ -11,10 +15,13 @@ export function createAppApi<T>(render: RenderFunction<T>) {
       mount(rootContainer) {
         const componentRenderer = rootComponent.setup?.()
 
+        // eslint-disable-next-line prefer-const
+        let n1: VNode | null = null
+
         const updateComponent = (): void => {
-          const vnode = componentRenderer?.() // start track target
-          if (vnode)
-            render(vnode, rootContainer)
+          const n2 = componentRenderer?.() // start track target
+          if (n2)
+            patch(n1, n2, rootContainer)
         }
 
         const effect = new ReactiveEffect(updateComponent)
