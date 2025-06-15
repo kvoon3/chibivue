@@ -9,6 +9,8 @@ export interface RendererOptions<
 
   createText: (text: string) => HostNode
 
+  setText: (node: HostNode, text: string) => void
+
   setElementText: (node: HostNode, text: string) => void
 
   insert: (child: HostNode | HostElement, parent: HostElement, anchor?: HostNode | null) => void

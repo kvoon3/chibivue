@@ -57,26 +57,33 @@ export function createRender<
 
   const patch = (n1: VNode | null, n2: VNode, container: RendererElement): void => {
     const { type } = n2
-    if (type === Text)
+    if (type === Text) {
       processText(n1, n2, container)
-    else
+    }
+    else {
       processElement(n1, n2, container)
+    }
   }
 
   const processElement = (n1: VNode | null, n2: VNode, container: RendererElement): void => {
-    if (n1 === null)
+    if (n1 === null) {
       mountElement(n2, container)
-    // else
-    //   patchElement(n1, n2)
+    }
+    else {
+      patchElement(n1, n2)
+    }
   }
 
   const processText = (n1: VNode | null, n2: VNode, container: RendererElement): void => {
-    if (n1 === null)
+    if (n1 === null) {
       // TODO [2025-07-01]: type error between `RendererNode` with `HostNode`
       // @ts-expect-error type error
       rendererOpts.insert((n2.el = rendererOpts.createText(n2.children as string)), container)
-    // else
-    //   patchText(n1, n2)
+    }
+    else {
+      const el = (n2.el = n1.el)
+      rendererOpts.setText(el, n2.children)
+    }
   }
 
   const mountElement = (vnode: VNode, container: RendererElement): void => {
@@ -84,21 +91,41 @@ export function createRender<
 
     // TODO [2025-07-01]: type error between `RendererNode` with `HostNode`
     // @ts-expect-error type error
-    const el = vnode.el = rendererOpts.createElement(type as string)
+    const el = (vnode.el = rendererOpts.createElement(type as string))
+
+    if (vnode.children) {
+      for (let idx = 0; idx < vnode.children.length; idx++) {
+        // NOTE: update parent children list is needed
+        const child = (vnode.children[idx] = normalizeVNode(vnode.children[idx]))
+        // const child = (vnode.children[idx] = normalizeVNode(vnode.children[idx]))
+
+        patch(null, child, el)
+      }
+    }
 
     if (props)
       rendererOpts.patchProp(el, props)
 
-    if (vnode.children) {
-      for (const child of vnode.children) {
-        // TODO [2025-07-01]: type error between `RendererNode` with `HostNode`
-        // @ts-expect-error type error
-        patch(null, normalizeVNode(child), el)
-      }
-    }
-
     // @ts-expect-error just type error
     rendererOpts.insert(el, container)
+  }
+
+  const patchElement = (n1: VNode, n2: VNode): void => {
+    const el = (n2.el = n1.el!)
+
+    const { props } = n2
+
+    rendererOpts.patchProp(el, props)
+
+    const c1 = n1.children
+    const c2 = n2.children
+    for (let idx = 0; idx < c2.length; idx++) {
+      // NOTE: update children list is needed
+      // c2[idx] may string, need normalized
+      const child = (c2[idx] = normalizeVNode(c2[idx]))
+
+      patch(c1[idx], child, el)
+    }
   }
 
   return { render, patch }
