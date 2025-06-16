@@ -10,6 +10,6 @@ export function h(
     type,
     props,
     children,
-    el: undefined,
+    el: null,
   }
 }

@@ -8,7 +8,7 @@ export interface VNode {
   type: VNodeTypes
   props: VNodeProps | null
   children: VNodeNormailzedChildren
-  el?: RendererNode | undefined
+  el: RendererNode | null
 }
 
 export interface VNodeProps {
@@ -27,7 +27,7 @@ export function createVNode(
   props: VNodeProps | null,
   children: string,
 ): VNode {
-  const vnode: VNode = { type, props: props || {}, children, el: undefined }
+  const vnode: VNode = { type, props: props || {}, children, el: null }
   return vnode
 }
 
