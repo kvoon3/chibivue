@@ -17,8 +17,8 @@ export type RenderFunction<HostElement = RendererElement> = (
 export type PatchFunction = (n1: VNode | null, n2: VNode, container: RendererElement) => void
 
 export function createRender<
-  HostNode = RendererNode,
-  HostElement = RendererElement,
+  HostNode extends RendererNode = RendererNode,
+  HostElement extends RendererElement = RendererElement,
 >(rendererOpts: RendererOptions<HostNode, HostElement>): {
   render: RenderFunction<HostElement>
   patch: PatchFunction
@@ -46,10 +46,7 @@ export function createRender<
   }
 
   const render = (vnode: VNode, rootContainer: HostElement): void => {
-    // TODO [2025-07-01]: no assume rootContainer are having `firstChild` DOM attribute
-    // @ts-expect-error type error
     while (rootContainer.firstChild)
-      // @ts-expect-error type error
       rootContainer.removeChild(rootContainer.firstChild)
 
     rendererOpts.insert(renderVNode(vnode), rootContainer)
@@ -76,12 +73,12 @@ export function createRender<
 
   const processText = (n1: VNode | null, n2: VNode, container: RendererElement): void => {
     if (n1 === null) {
-      // TODO [2025-07-01]: type error between `RendererNode` with `HostNode`
-      // @ts-expect-error type error
+      // @ts-expect-error type error between `RendererNode` with `HostNode`
       rendererOpts.insert((n2.el = rendererOpts.createText(n2.children as string)), container)
     }
     else {
-      const el = (n2.el = n1.el)
+      const el: RendererNode = (n2.el! = n1.el!)
+      // @ts-expect-error type error between `RendererNode` with `HostNode`
       rendererOpts.setText(el, n2.children)
     }
   }
@@ -89,13 +86,13 @@ export function createRender<
   const mountElement = (vnode: VNode, container: RendererElement): void => {
     const { type, props } = vnode
 
-    // TODO [2025-07-01]: type error between `RendererNode` with `HostNode`
-    // @ts-expect-error type error
+    // TODO: type error between `RendererNode` with `HostNode`
     const el = (vnode.el = rendererOpts.createElement(type as string))
 
     if (vnode.children) {
       for (let idx = 0; idx < vnode.children.length; idx++) {
         // NOTE: update parent children list is needed
+        // @ts-expect-error type error: vnode.children[idx] "readonly"
         const child = (vnode.children[idx] = normalizeVNode(vnode.children[idx]))
         // const child = (vnode.children[idx] = normalizeVNode(vnode.children[idx]))
 
@@ -115,16 +112,17 @@ export function createRender<
 
     const { props } = n2
 
+    // @ts-expect-error type error between `RendererNode` with `HostNode`
     rendererOpts.patchProp(el, props)
 
     const c1 = n1.children
     const c2 = n2.children
     for (let idx = 0; idx < c2.length; idx++) {
       // NOTE: update children list is needed
-      // c2[idx] may string, need normalized
-      const child = (c2[idx] = normalizeVNode(c2[idx]))
+      // @ts-expect-error type error: c2[idx] "readonly"
+      const child = (c2[idx] = normalizeVNode(c2[idx])) // c2[idx] may string, need normalized
 
-      patch(c1[idx], child, el)
+      patch(c1[idx] as VNode, child, el)
     }
   }
 
